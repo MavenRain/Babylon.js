@@ -756,25 +756,15 @@
         }
 
         public static TransformCoordinatesToRef(vector: Vector3, transformation: Matrix, result: Vector3): void {
-            var x = (vector.x * transformation.m[0]) + (vector.y * transformation.m[4]) + (vector.z * transformation.m[8]) + transformation.m[12];
-            var y = (vector.x * transformation.m[1]) + (vector.y * transformation.m[5]) + (vector.z * transformation.m[9]) + transformation.m[13];
-            var z = (vector.x * transformation.m[2]) + (vector.y * transformation.m[6]) + (vector.z * transformation.m[10]) + transformation.m[14];
-            var w = (vector.x * transformation.m[3]) + (vector.y * transformation.m[7]) + (vector.z * transformation.m[11]) + transformation.m[15];
-
-            result.x = x / w;
-            result.y = y / w;
-            result.z = z / w;
+            result.x = (vector.x * transformation.m[0]) + (vector.y * transformation.m[3]) + (vector.z * transformation.m[6]);
+            result.y = (vector.x * transformation.m[1]) + (vector.y * transformation.m[4]) + (vector.z * transformation.m[7]);
+            result.z = (vector.x * transformation.m[3]) + (vector.y * transformation.m[5]) + (vector.z * transformation.m[8]);
         }
 
         public static TransformCoordinatesFromFloatsToRef(x: number, y: number, z: number, transformation: Matrix, result: Vector3): void {
-            var rx = (x * transformation.m[0]) + (y * transformation.m[4]) + (z * transformation.m[8]) + transformation.m[12];
-            var ry = (x * transformation.m[1]) + (y * transformation.m[5]) + (z * transformation.m[9]) + transformation.m[13];
-            var rz = (x * transformation.m[2]) + (y * transformation.m[6]) + (z * transformation.m[10]) + transformation.m[14];
-            var rw = (x * transformation.m[3]) + (y * transformation.m[7]) + (z * transformation.m[11]) + transformation.m[15];
-
-            result.x = rx / rw;
-            result.y = ry / rw;
-            result.z = rz / rw;
+            result.x = (x * transformation.m[0]) + (y * transformation.m[3]) + (z * transformation.m[6]);
+            result.y = (x * transformation.m[1]) + (y * transformation.m[4]) + (z * transformation.m[7]);
+            result.z = (x * transformation.m[2]) + (y * transformation.m[5]) + (z * transformation.m[8]);
         }
 
         public static TransformNormal(vector: Vector3, transformation: Matrix): Vector3 {
@@ -1411,19 +1401,12 @@
             result.m[0] = 1.0 - (2.0 * (yy + zz));
             result.m[1] = 2.0 * (xy + zw);
             result.m[2] = 2.0 * (zx - yw);
-            result.m[3] = 0;
-            result.m[4] = 2.0 * (xy - zw);
-            result.m[5] = 1.0 - (2.0 * (zz + xx));
-            result.m[6] = 2.0 * (yz + xw);
-            result.m[7] = 0;
-            result.m[8] = 2.0 * (zx + yw);
-            result.m[9] = 2.0 * (yz - xw);
-            result.m[10] = 1.0 - (2.0 * (yy + xx));
-            result.m[11] = 0;
-            result.m[12] = 0;
-            result.m[13] = 0;
-            result.m[14] = 0;
-            result.m[15] = 1.0;
+            result.m[3] = 2.0 * (xy - zw);
+            result.m[4] = 1.0 - (2.0 * (zz + xx));
+            result.m[5] = 2.0 * (yz + xw);
+            result.m[6] = 2.0 * (zx + yw);
+            result.m[7] = 2.0 * (yz - xw);
+            result.m[8] = 1.0 - (2.0 * (yy + xx));
 
             return this;
         }
@@ -1443,9 +1426,9 @@
 
         public static FromRotationMatrixToRef(matrix: Matrix, result: Quaternion): void {
             var data = matrix.m;
-            var m11 = data[0], m12 = data[4], m13 = data[8];
-            var m21 = data[1], m22 = data[5], m23 = data[9];
-            var m31 = data[2], m32 = data[6], m33 = data[10];
+            var m11 = data[0], m12 = data[3], m13 = data[6];
+            var m21 = data[1], m22 = data[4], m23 = data[7];
+            var m31 = data[2], m32 = data[5], m33 = data[8];
             var trace = m11 + m22 + m33;
             var s;
 
@@ -1571,33 +1554,24 @@
         private static _yAxis: Vector3 = Vector3.Zero();
         private static _zAxis: Vector3 = Vector3.Zero();
 
-        public m: Float32Array = new Float32Array(16);
+        public m: Float32Array = new Float32Array(9);
 
         // Properties
         public isIdentity(): boolean {
-            if (this.m[0] !== 1.0 || this.m[5] !== 1.0 || this.m[10] !== 1.0 || this.m[15] !== 1.0)
+            if (this.m[0] !== 1.0 || this.m[4] !== 1.0 || this.m[8] !== 1.0)
                 return false;
 
             if (this.m[1] !== 0.0 || this.m[2] !== 0.0 || this.m[3] !== 0.0 ||
                 this.m[4] !== 0.0 || this.m[6] !== 0.0 || this.m[7] !== 0.0 ||
-                this.m[8] !== 0.0 || this.m[9] !== 0.0 || this.m[11] !== 0.0 ||
-                this.m[12] !== 0.0 || this.m[13] !== 0.0 || this.m[14] !== 0.0)
+                this.m[8] !== 0.0) 
                 return false;
 
             return true;
         }
 
         public determinant(): number {
-            var temp1 = (this.m[10] * this.m[15]) - (this.m[11] * this.m[14]);
-            var temp2 = (this.m[9] * this.m[15]) - (this.m[11] * this.m[13]);
-            var temp3 = (this.m[9] * this.m[14]) - (this.m[10] * this.m[13]);
-            var temp4 = (this.m[8] * this.m[15]) - (this.m[11] * this.m[12]);
-            var temp5 = (this.m[8] * this.m[14]) - (this.m[10] * this.m[12]);
-            var temp6 = (this.m[8] * this.m[13]) - (this.m[9] * this.m[12]);
 
-            return ((((this.m[0] * (((this.m[5] * temp1) - (this.m[6] * temp2)) + (this.m[7] * temp3))) - (this.m[1] * (((this.m[4] * temp1) -
-                (this.m[6] * temp4)) + (this.m[7] * temp5)))) + (this.m[2] * (((this.m[4] * temp2) - (this.m[5] * temp4)) + (this.m[7] * temp6)))) -
-                (this.m[3] * (((this.m[4] * temp3) - (this.m[5] * temp5)) + (this.m[6] * temp6))));
+            return this.m[0] * (this.m[4] * this.m[8] - this.m[5] * this.m[7]) - this.m[1] * (this.m[3] * this.m[8] - this.m[5] * this.m[6]) + this.m[2] * (this.m[3] * this.m[7] - this.m[4] * this.m[6]);
         }
 
         // Methods
@@ -1616,62 +1590,16 @@
         }
 
         public invertToRef(other: Matrix): Matrix {
-            var l1 = this.m[0];
-            var l2 = this.m[1];
-            var l3 = this.m[2];
-            var l4 = this.m[3];
-            var l5 = this.m[4];
-            var l6 = this.m[5];
-            var l7 = this.m[6];
-            var l8 = this.m[7];
-            var l9 = this.m[8];
-            var l10 = this.m[9];
-            var l11 = this.m[10];
-            var l12 = this.m[11];
-            var l13 = this.m[12];
-            var l14 = this.m[13];
-            var l15 = this.m[14];
-            var l16 = this.m[15];
-            var l17 = (l11 * l16) - (l12 * l15);
-            var l18 = (l10 * l16) - (l12 * l14);
-            var l19 = (l10 * l15) - (l11 * l14);
-            var l20 = (l9 * l16) - (l12 * l13);
-            var l21 = (l9 * l15) - (l11 * l13);
-            var l22 = (l9 * l14) - (l10 * l13);
-            var l23 = ((l6 * l17) - (l7 * l18)) + (l8 * l19);
-            var l24 = -(((l5 * l17) - (l7 * l20)) + (l8 * l21));
-            var l25 = ((l5 * l18) - (l6 * l20)) + (l8 * l22);
-            var l26 = -(((l5 * l19) - (l6 * l21)) + (l7 * l22));
-            var l27 = 1.0 / ((((l1 * l23) + (l2 * l24)) + (l3 * l25)) + (l4 * l26));
-            var l28 = (l7 * l16) - (l8 * l15);
-            var l29 = (l6 * l16) - (l8 * l14);
-            var l30 = (l6 * l15) - (l7 * l14);
-            var l31 = (l5 * l16) - (l8 * l13);
-            var l32 = (l5 * l15) - (l7 * l13);
-            var l33 = (l5 * l14) - (l6 * l13);
-            var l34 = (l7 * l12) - (l8 * l11);
-            var l35 = (l6 * l12) - (l8 * l10);
-            var l36 = (l6 * l11) - (l7 * l10);
-            var l37 = (l5 * l12) - (l8 * l9);
-            var l38 = (l5 * l11) - (l7 * l9);
-            var l39 = (l5 * l10) - (l6 * l9);
 
-            other.m[0] = l23 * l27;
-            other.m[4] = l24 * l27;
-            other.m[8] = l25 * l27;
-            other.m[12] = l26 * l27;
-            other.m[1] = -(((l2 * l17) - (l3 * l18)) + (l4 * l19)) * l27;
-            other.m[5] = (((l1 * l17) - (l3 * l20)) + (l4 * l21)) * l27;
-            other.m[9] = -(((l1 * l18) - (l2 * l20)) + (l4 * l22)) * l27;
-            other.m[13] = (((l1 * l19) - (l2 * l21)) + (l3 * l22)) * l27;
-            other.m[2] = (((l2 * l28) - (l3 * l29)) + (l4 * l30)) * l27;
-            other.m[6] = -(((l1 * l28) - (l3 * l31)) + (l4 * l32)) * l27;
-            other.m[10] = (((l1 * l29) - (l2 * l31)) + (l4 * l33)) * l27;
-            other.m[14] = -(((l1 * l30) - (l2 * l32)) + (l3 * l33)) * l27;
-            other.m[3] = -(((l2 * l34) - (l3 * l35)) + (l4 * l36)) * l27;
-            other.m[7] = (((l1 * l34) - (l3 * l37)) + (l4 * l38)) * l27;
-            other.m[11] = -(((l1 * l35) - (l2 * l37)) + (l4 * l39)) * l27;
-            other.m[15] = (((l1 * l36) - (l2 * l38)) + (l3 * l39)) * l27;
+            other.m[0] = 1 / this.determinant() * (this.m[4] * this.m[8] - this.m[5] * this.m[7]);
+            other.m[1] = 1 / this.determinant() * (this.m[1] * this.m[8] - this.m[2] * this.m[7]);
+            other.m[2] = 1 / this.determinant() * (this.m[1] * this.m[5] - this.m[2] * this.m[4]);
+            other.m[3] = 1 / this.determinant() * (this.m[3] * this.m[8] - this.m[5] * this.m[6]);
+            other.m[4] = 1 / this.determinant() * (this.m[0] * this.m[8] - this.m[2] * this.m[6]);
+            other.m[5] = 1 / this.determinant() * (this.m[0] * this.m[5] - this.m[2] * this.m[3]);
+            other.m[6] = 1 / this.determinant() * (this.m[3] * this.m[7] - this.m[4] * this.m[6]);
+            other.m[7] = 1 / this.determinant() * (this.m[0] * this.m[7] - this.m[1] * this.m[6]);
+            other.m[8] = 1 / this.determinant() * (this.m[0] * this.m[4] - this.m[1] * this.m[3]);
 
             return this;
         }
