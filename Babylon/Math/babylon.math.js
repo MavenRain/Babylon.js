@@ -1338,10 +1338,13 @@ var BABYLON;
             return this;
         };
         Matrix.prototype.equals = function (value) {
-            return value && (this.m[0] === value.m[0] && this.m[1] === value.m[1] && this.m[2] === value.m[2] && this.m[3] === value.m[3] && this.m[4] === value.m[4] && this.m[5] === value.m[5] && this.m[6] === value.m[6] && this.m[7] === value.m[7] && this.m[8] === value.m[8] && this.m[9] === value.m[9] && this.m[10] === value.m[10] && this.m[11] === value.m[11] && this.m[12] === value.m[12] && this.m[13] === value.m[13] && this.m[14] === value.m[14] && this.m[15] === value.m[15]);
+            return value &&
+                (this.m[0] === value.m[0] && this.m[1] === value.m[1] && this.m[2] === value.m[2] && this.m[3] === value.m[3] &&
+                this.m[4] === value.m[4] && this.m[5] === value.m[5] && this.m[6] === value.m[6] && this.m[7] === value.m[7] &&
+                this.m[8] === value.m[8]);
         };
         Matrix.prototype.clone = function () {
-            return Matrix.FromValues(this.m[0], this.m[1], this.m[2], this.m[3], this.m[4], this.m[5], this.m[6], this.m[7], this.m[8], this.m[9], this.m[10], this.m[11], this.m[12], this.m[13], this.m[14], this.m[15]);
+            return Matrix.FromValues(this.m[0], this.m[1], this.m[2], this.m[3], this.m[4], this.m[5], this.m[6], this.m[7], this.m[8]);
         };
         Matrix.prototype.decompose = function (scale, rotation, translation) {
             translation.x = this.m[12];
@@ -1374,50 +1377,36 @@ var BABYLON;
             return result;
         };
         Matrix.FromArrayToRef = function (array, offset, result) {
-            for (var index = 0; index < 16; index++) {
+            for (var index = 0; index < 9; index++) {
                 result.m[index] = array[index + offset];
             }
         };
-        Matrix.FromValuesToRef = function (initialM11, initialM12, initialM13, initialM14, initialM21, initialM22, initialM23, initialM24, initialM31, initialM32, initialM33, initialM34, initialM41, initialM42, initialM43, initialM44, result) {
+        Matrix.FromValuesToRef = function (initialM11, initialM21, initialM31, initialM12, initialM22, initialM32, initialM13, initialM23, initialM33, result) {
             result.m[0] = initialM11;
-            result.m[1] = initialM12;
-            result.m[2] = initialM13;
-            result.m[3] = initialM14;
-            result.m[4] = initialM21;
-            result.m[5] = initialM22;
-            result.m[6] = initialM23;
-            result.m[7] = initialM24;
-            result.m[8] = initialM31;
-            result.m[9] = initialM32;
-            result.m[10] = initialM33;
-            result.m[11] = initialM34;
-            result.m[12] = initialM41;
-            result.m[13] = initialM42;
-            result.m[14] = initialM43;
-            result.m[15] = initialM44;
+            result.m[1] = initialM21;
+            result.m[2] = initialM31;
+            result.m[3] = initialM12;
+            result.m[4] = initialM22;
+            result.m[5] = initialM23;
+            result.m[6] = initialM31;
+            result.m[7] = initialM32;
+            result.m[8] = initialM33;
         };
-        Matrix.FromValues = function (initialM11, initialM12, initialM13, initialM14, initialM21, initialM22, initialM23, initialM24, initialM31, initialM32, initialM33, initialM34, initialM41, initialM42, initialM43, initialM44) {
+        Matrix.FromValues = function (initialM11, initialM21, initialM31, initialM12, initialM22, initialM32, initialM13, initialM23, initialM33) {
             var result = new Matrix();
             result.m[0] = initialM11;
-            result.m[1] = initialM12;
-            result.m[2] = initialM13;
-            result.m[3] = initialM14;
-            result.m[4] = initialM21;
-            result.m[5] = initialM22;
-            result.m[6] = initialM23;
-            result.m[7] = initialM24;
-            result.m[8] = initialM31;
-            result.m[9] = initialM32;
-            result.m[10] = initialM33;
-            result.m[11] = initialM34;
-            result.m[12] = initialM41;
-            result.m[13] = initialM42;
-            result.m[14] = initialM43;
-            result.m[15] = initialM44;
+            result.m[1] = initialM21;
+            result.m[2] = initialM31;
+            result.m[3] = initialM12;
+            result.m[4] = initialM22;
+            result.m[5] = initialM23;
+            result.m[6] = initialM31;
+            result.m[7] = initialM32;
+            result.m[8] = initialM33;
             return result;
         };
         Matrix.Compose = function (scale, rotation, translation) {
-            var result = Matrix.FromValues(scale.x, 0, 0, 0, 0, scale.y, 0, 0, 0, 0, scale.z, 0, 0, 0, 0, 1);
+            var result = Matrix.FromValues(scale.x, 0, 0, 0, scale.y, 0, 0, 0, scale.z);
             var rotationMatrix = Matrix.Identity();
             rotation.toRotationMatrix(rotationMatrix);
             result = result.multiply(rotationMatrix);
@@ -1425,13 +1414,13 @@ var BABYLON;
             return result;
         };
         Matrix.Identity = function () {
-            return Matrix.FromValues(1.0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0);
+            return Matrix.FromValues(1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0);
         };
         Matrix.IdentityToRef = function (result) {
             Matrix.FromValuesToRef(1.0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0, result);
         };
         Matrix.Zero = function () {
-            return Matrix.FromValues(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            return Matrix.FromValues(0, 0, 0, 0, 0, 0, 0, 0, 0);
         };
         Matrix.RotationX = function (angle) {
             var result = new Matrix();

@@ -1669,8 +1669,7 @@
         public clone(): Matrix {
             return Matrix.FromValues(this.m[0], this.m[1], this.m[2], this.m[3],
                 this.m[4], this.m[5], this.m[6], this.m[7],
-                this.m[8], this.m[9], this.m[10], this.m[11],
-                this.m[12], this.m[13], this.m[14], this.m[15]);
+                this.m[8]);
         }
 
         public decompose(scale: Vector3, rotation: Quaternion, translation: Vector3): boolean {
@@ -1720,66 +1719,48 @@
 
         public static FromArrayToRef(array: number[], offset: number, result: Matrix) {
 
-            for (var index = 0; index < 16; index++) {
+            for (var index = 0; index < 9; index++) {
                 result.m[index] = array[index + offset];
             }
         }
 
-        public static FromValuesToRef(initialM11: number, initialM12: number, initialM13: number, initialM14: number,
-            initialM21: number, initialM22: number, initialM23: number, initialM24: number,
-            initialM31: number, initialM32: number, initialM33: number, initialM34: number,
-            initialM41: number, initialM42: number, initialM43: number, initialM44: number, result: Matrix): void {
+        public static FromValuesToRef(initialM11: number, initialM21: number, initialM31: number, 
+            initialM12: number, initialM22: number, initialM32: number,
+            initialM13: number, initialM23: number, initialM33: number, result: Matrix): void {
 
             result.m[0] = initialM11;
-            result.m[1] = initialM12;
-            result.m[2] = initialM13;
-            result.m[3] = initialM14;
-            result.m[4] = initialM21;
-            result.m[5] = initialM22;
-            result.m[6] = initialM23;
-            result.m[7] = initialM24;
-            result.m[8] = initialM31;
-            result.m[9] = initialM32;
-            result.m[10] = initialM33;
-            result.m[11] = initialM34;
-            result.m[12] = initialM41;
-            result.m[13] = initialM42;
-            result.m[14] = initialM43;
-            result.m[15] = initialM44;
+            result.m[1] = initialM21;
+            result.m[2] = initialM31;
+            result.m[3] = initialM12;
+            result.m[4] = initialM22;
+            result.m[5] = initialM23;
+            result.m[6] = initialM31;
+            result.m[7] = initialM32;
+            result.m[8] = initialM33;
+
         }
 
-        public static FromValues(initialM11: number, initialM12: number, initialM13: number, initialM14: number,
-            initialM21: number, initialM22: number, initialM23: number, initialM24: number,
-            initialM31: number, initialM32: number, initialM33: number, initialM34: number,
-            initialM41: number, initialM42: number, initialM43: number, initialM44: number): Matrix {
+        public static FromValues(initialM11: number, initialM21: number, initialM31: number,
+            initialM12: number, initialM22: number, initialM32: number,
+            initialM13: number, initialM23: number, initialM33: number): Matrix {
 
             var result = new Matrix();
 
             result.m[0] = initialM11;
-            result.m[1] = initialM12;
-            result.m[2] = initialM13;
-            result.m[3] = initialM14;
-            result.m[4] = initialM21;
-            result.m[5] = initialM22;
-            result.m[6] = initialM23;
-            result.m[7] = initialM24;
-            result.m[8] = initialM31;
-            result.m[9] = initialM32;
-            result.m[10] = initialM33;
-            result.m[11] = initialM34;
-            result.m[12] = initialM41;
-            result.m[13] = initialM42;
-            result.m[14] = initialM43;
-            result.m[15] = initialM44;
+            result.m[1] = initialM21;
+            result.m[2] = initialM31;
+            result.m[3] = initialM12;
+            result.m[4] = initialM22;
+            result.m[5] = initialM23;
+            result.m[6] = initialM31;
+            result.m[7] = initialM32;
+            result.m[8] = initialM33;
 
             return result;
         }
 
         public static Compose(scale: Vector3, rotation: Quaternion, translation: Vector3): Matrix {
-            var result = Matrix.FromValues(scale.x, 0, 0, 0,
-                0, scale.y, 0, 0,
-                0, 0, scale.z, 0,
-                0, 0, 0, 1);
+            var result = Matrix.FromValues(scale.x, 0, 0, 0, scale.y, 0, 0, 0, scale.z);
 
             var rotationMatrix = Matrix.Identity();
             rotation.toRotationMatrix(rotationMatrix);
@@ -1791,24 +1772,15 @@
         }
 
         public static Identity(): Matrix {
-            return Matrix.FromValues(1.0, 0, 0, 0,
-                0, 1.0, 0, 0,
-                0, 0, 1.0, 0,
-                0, 0, 0, 1.0);
+            return Matrix.FromValues(1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0);
         }
 
         public static IdentityToRef(result: Matrix): void {
-            Matrix.FromValuesToRef(1.0, 0, 0, 0,
-                0, 1.0, 0, 0,
-                0, 0, 1.0, 0,
-                0, 0, 0, 1.0, result);
+            Matrix.FromValuesToRef(1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0, result);
         }
 
         public static Zero(): Matrix {
-            return Matrix.FromValues(0, 0, 0, 0,
-                0, 0, 0, 0,
-                0, 0, 0, 0,
-                0, 0, 0, 0);
+            return Matrix.FromValues(0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
 
         public static RotationX(angle: number): Matrix {
