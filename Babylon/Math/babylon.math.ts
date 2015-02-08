@@ -1800,27 +1800,12 @@
         }
 
         public static RotationXToRef(angle: number, result: Matrix): void {
-            var s = Math.sin(angle);
-            var c = Math.cos(angle);
-
-            result.m[0] = 1.0;
-            result.m[15] = 1.0;
-
-            result.m[5] = c;
-            result.m[10] = c;
-            result.m[9] = -s;
-            result.m[6] = s;
-
-            result.m[1] = 0;
-            result.m[2] = 0;
-            result.m[3] = 0;
-            result.m[4] = 0;
-            result.m[7] = 0;
-            result.m[8] = 0;
-            result.m[11] = 0;
-            result.m[12] = 0;
-            result.m[13] = 0;
-            result.m[14] = 0;
+            result = this.Zero();
+            result.m[0] = 1;
+            result.m[4] = Math.cos(angle);
+            result.m[5] = Math.sin(angle);
+            result.m[7] = -Math.sin(angle);
+            result.m[8] = Math.cos(angle);
         }
 
         public static RotationY(angle: number): Matrix {
@@ -1832,27 +1817,12 @@
         }
 
         public static RotationYToRef(angle: number, result: Matrix): void {
-            var s = Math.sin(angle);
-            var c = Math.cos(angle);
-
-            result.m[5] = 1.0;
-            result.m[15] = 1.0;
-
-            result.m[0] = c;
-            result.m[2] = -s;
-            result.m[8] = s;
-            result.m[10] = c;
-
-            result.m[1] = 0;
-            result.m[3] = 0;
-            result.m[4] = 0;
-            result.m[6] = 0;
-            result.m[7] = 0;
-            result.m[9] = 0;
-            result.m[11] = 0;
-            result.m[12] = 0;
-            result.m[13] = 0;
-            result.m[14] = 0;
+            result = this.Zero();
+            result.m[0] = Math.cos(angle);
+            result.m[2] = -Math.sin(angle);
+            result.m[4] = 1;
+            result.m[6] = Math.sin(angle);
+            result.m[8] = Math.cos(angle);
         }
 
         public static RotationZ(angle: number): Matrix {
@@ -1864,27 +1834,12 @@
         }
 
         public static RotationZToRef(angle: number, result: Matrix): void {
-            var s = Math.sin(angle);
-            var c = Math.cos(angle);
-
-            result.m[10] = 1.0;
-            result.m[15] = 1.0;
-
-            result.m[0] = c;
-            result.m[1] = s;
-            result.m[4] = -s;
-            result.m[5] = c;
-
-            result.m[2] = 0;
-            result.m[3] = 0;
-            result.m[6] = 0;
-            result.m[7] = 0;
-            result.m[8] = 0;
-            result.m[9] = 0;
-            result.m[11] = 0;
-            result.m[12] = 0;
-            result.m[13] = 0;
-            result.m[14] = 0;
+            result = this.Zero();
+            result.m[0] = Math.cos(angle);
+            result.m[1] = Math.sin(angle);
+            result.m[3] = -Math.sin(angle);
+            result.m[4] = Math.cos(angle);
+            result.m[8] = 1;
         }
 
         public static RotationAxis(axis: Vector3, angle: number): Matrix {
